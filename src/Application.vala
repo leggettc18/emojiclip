@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: MIT
+ * SPDX-FileCopyrightText: 2021 Christopher Leggett <chris@leggett.dev>
+*/
+
 public class MyApp : Gtk.Application {
     public MyApp () {
         Object (
@@ -7,14 +12,8 @@ public class MyApp : Gtk.Application {
     }
     
     protected override void activate () {
-        var button_hello = new Gtk.Button.with_label ("Click me!") {
-            margin = 12
-        };
+        var label = new Gtk.Label ("Hello World Again!");
         
-        button_hello.clicked.connect (() => {
-            button_hello.label = "Hello World!";
-            button_hello.sensitive = false;
-        });
         
         var main_window = new Gtk.ApplicationWindow (this) {
             default_height = 300,
@@ -22,7 +21,7 @@ public class MyApp : Gtk.Application {
             title = "Emoji Clip"
         };
         
-        main_window.add (button_hello);
+        main_window.add (label);
         main_window.show_all ();
     }
     
