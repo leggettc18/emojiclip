@@ -1,0 +1,10 @@
+[Destkop Entry]
+Name=EmojiClip
+GenericName=Emoji Clipboard App
+Comment=Copies the selected Emoji to the Clipboard.
+Categories=Accessories;
+Exec=com.github.leggettc18.emojiclip
+Icon=com.github.leggettc18.emojiclip
+Terminal=false
+Type=Application
+Keywords=Emoji;Clipboard;Copy;
