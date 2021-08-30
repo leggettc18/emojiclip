@@ -3,7 +3,7 @@ project('com.github.leggettc18.emojiclip', 'vala', 'c')
 gnome = import('gnome')
 i18n = import('i18n')
 
-add_global_arguments('-DGETTEX_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
 
 asresources = gnome.compile_resources(
     'as-resources', join_paths('data', 'gresource.xml'),
@@ -21,6 +21,7 @@ executable(
         dependency('gdk-x11-3.0'),
         dependency('xtst'),
         dependency('x11'),
+        dependency('granite'),
     ],
     install: true
 )

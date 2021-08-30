@@ -12,11 +12,32 @@ public class MyApp : Gtk.Application {
     }
     
     protected override void activate () {
+    
+        var quit_action = new SimpleAction ("quit", null);
+        
+        var main_window = new Gtk.ApplicationWindow (this) {
+            height_request = 500,
+            width_request = 400,
+            title = "Emoji Clip",
+            resizable = false,
+        };
+
+        add_action (quit_action);
+        set_accels_for_action ("app.quit", {"Escape"});
+
+        quit_action.activate.connect (() => {
+            if (main_window != null) {
+                main_window.destroy ();
+            }
+        });
+    
         var grid = new Gtk.Grid () {
             orientation = Gtk.Orientation.VERTICAL,
             halign = Gtk.Align.CENTER,
             valign = Gtk.Align.END,
+            row_spacing = 12,
         };
+
         
         var entry = new Gtk.Entry () {
             halign = Gtk.Align.CENTER,
@@ -25,14 +46,19 @@ public class MyApp : Gtk.Application {
         };
         entry.get_style_context ().add_class ("hidden");
         
-        var main_window = new Gtk.ApplicationWindow (this) {
-            height_request = 400,
-            width_request = 500,
-            title = "Emoji Clip",
-            resizable = false,
-        };
-        
         grid.add (entry);
+        
+        var title = new Gtk.Label (_("Select Emoji to Insert"));
+        title.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
+
+        var copy = new Gtk.Label (_("Selecting will copy the emoji to the clipboard and paste into any focused text input."));
+        copy.max_width_chars = 50;
+        copy.wrap = true;
+        copy.get_style_context ().add_class ("copy-label");
+        
+        grid.add (title);
+        grid.add (copy);
+        
         main_window.add (grid);
         
         // CSS provider
@@ -57,7 +83,22 @@ public class MyApp : Gtk.Application {
                 main_window.close();
                 return false;
             });
-            //main_window.close ();
+        });
+        
+        entry.focus_in_event.connect (() => {
+            Timeout.add(500, () => {
+                main_window.close();
+                return false;
+            });
+            return Gdk.EVENT_STOP;
+        });
+
+        main_window.focus_out_event.connect ((event) => {
+            Timeout.add(500, () => {
+                main_window.close();
+                return false;
+            });
+            return Gdk.EVENT_STOP;
         });
     }
     
