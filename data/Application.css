@@ -1,0 +1,10 @@
+.hidden,
+.titlebar {
+  background: alpha(@theme_bg_color, 0);
+  border: none;
+  color: alpha(@theme_bg_color, 0);
+  font-size: 0.001px;
+  margin: 0;
+  opacity: 0;
+  padding: 0;
+}

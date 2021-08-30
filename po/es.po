@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.leggettc18.emojiclip\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-28 14:56-0400\n"
+"POT-Creation-Date: 2021-08-28 15:25-0400\n"
 "PO-Revision-Date: 2021-08-28 14:56-0400\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,14 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: src/Application.vala:15
-msgid "Hello World Again!"
-msgstr ""
-
-#: src/Application.vala:20
-msgid "Emoji Clip"
-msgstr ""
 
 #: data/emojiclip.desktop.in:3 data/emojiclip.appdata.xml.in:6
 msgid "EmojiClip"

@@ -12,16 +12,81 @@ public class MyApp : Gtk.Application {
     }
     
     protected override void activate () {
-        var label = new Gtk.Label (_("Hello World Again!"));
-        
-        var main_window = new Gtk.ApplicationWindow (this) {
-            default_height = 300,
-            default_width = 300,
-            title = _("Emoji Clip")
+        var grid = new Gtk.Grid () {
+            orientation = Gtk.Orientation.VERTICAL,
+            halign = Gtk.Align.CENTER,
+            valign = Gtk.Align.END,
         };
         
-        main_window.add (label);
+        var entry = new Gtk.Entry () {
+            halign = Gtk.Align.CENTER,
+            width_request = 0,
+            height_request = 0,
+        };
+        entry.get_style_context ().add_class ("hidden");
+        
+        var main_window = new Gtk.ApplicationWindow (this) {
+            height_request = 400,
+            width_request = 500,
+            title = "Emoji Clip",
+            resizable = false,
+        };
+        
+        grid.add (entry);
+        main_window.add (grid);
+        
+        // CSS provider
+        var provider = new Gtk.CssProvider ();
+        provider.load_from_resource ("/com/github/leggettc18/emojiclip/Application.css");
+        Gtk.StyleContext.add_provider_for_screen (
+          Gdk.Screen.get_default (),
+          provider,
+          Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
+        
         main_window.show_all ();
+        
+        entry.insert_emoji ();
+        
+        entry.changed.connect (() => {
+            var clipboard = Gtk.Clipboard.get_for_display (entry.get_display (), Gdk.SELECTION_CLIPBOARD);
+            clipboard.set_text (entry.text, -1);
+            main_window.hide ();
+            paste ();
+            Timeout.add(500, () => {
+                main_window.close();
+                return false;
+            });
+            //main_window.close ();
+        });
+    }
+    
+    // From Clipped: https://github.com/davidmhewitt/clipped/blob/edac68890c2a78357910f05bf44060c2aba5958e/src/ClipboardManager.vala
+    private void paste () {
+        perform_key_event ("<Control>v", true, 0);
+        perform_key_event ("<Control>v", false, 0);
+    }
+
+    private static void perform_key_event (string accelerator, bool press, ulong delay) {
+        uint keysym;
+        Gdk.ModifierType modifiers;
+        Gtk.accelerator_parse (accelerator, out keysym, out modifiers);
+        unowned X.Display display = Gdk.X11.get_default_xdisplay ();
+        int keycode = display.keysym_to_keycode (keysym);
+
+        if (keycode != 0) {
+            if (Gdk.ModifierType.CONTROL_MASK in modifiers) {
+                int modcode = display.keysym_to_keycode (Gdk.Key.Control_L);
+                XTest.fake_key_event (display, modcode, press, delay);
+            }
+
+            if (Gdk.ModifierType.SHIFT_MASK in modifiers) {
+                int modcode = display.keysym_to_keycode (Gdk.Key.Shift_L);
+                XTest.fake_key_event (display, modcode, press, delay);
+            }
+
+            XTest.fake_key_event (display, keycode, press, delay);
+        }
     }
     
     public static int main (string[] args) {

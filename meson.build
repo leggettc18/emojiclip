@@ -1,33 +1,29 @@
 project('com.github.leggettc18.emojiclip', 'vala', 'c')
 
+gnome = import('gnome')
 i18n = import('i18n')
 
 add_global_arguments('-DGETTEX_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
 
+asresources = gnome.compile_resources(
+    'as-resources', join_paths('data', 'gresource.xml'),
+    source_dir: 'data',
+    c_name: 'as'
+)
+
 executable(
     meson.project_name(),
+    asresources,
     'src' / 'Application.vala',
     dependencies: [
-        dependency('gtk+-3.0')
+        dependency('gtk+-3.0'),
+        dependency('glib-2.0'),
+        dependency('gdk-x11-3.0'),
+        dependency('xtst'),
+        dependency('x11'),
     ],
     install: true
 )
 
-i18n.merge_file(
-    input: 'data' / 'emojiclip.desktop.in',
-    output: 'meson.project_name' + '.desktop',
-    po_dir: meson.source_root() / 'po',
-    type: 'desktop',
-    install: true,
-    install_dir: get_option('datadir') / 'applications'
-)
-
-i18n.merge_file(
-    input: 'data' / 'emojiclip.appdata.xml.in',
-    output: meson.project_name() + '.appdata.xml',
-    po_dir: meson.source_root() / 'po',
-    install: true,
-    install_dir: get_option('datadir') / 'metainfo'
-)
-
+subdir('data')
 subdir('po')
